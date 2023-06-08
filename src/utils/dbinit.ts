@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import pg from 'pg';
 import { Sequelize } from 'sequelize-typescript';
 
 const URI
@@ -6,6 +7,7 @@ const URI
 
 export const dbinit = () =>
   new Sequelize(URI, {
+    dialectModule: pg,
     dialectOptions: {
       ssl: true,
     },
