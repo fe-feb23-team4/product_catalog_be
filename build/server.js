@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
-const __importDefault
-  = (this && this.__importDefault)
-  || function(mod) {
+const __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
 
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 
-const express_1 = __importDefault(require('express'));
-const cors_1 = __importDefault(require('cors'));
-const dbinit_1 = require('./utils/dbinit');
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const dbinit_1 = require("./utils/dbinit");
 const PORT = process.env.PORT || 3000;
 const server = (0, express_1.default)();
 
