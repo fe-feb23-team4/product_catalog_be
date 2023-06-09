@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "nodemon src/server.ts",
     "build": "tsc -p .",
-    "prettier": "npx prettier --write . --ignore-path .gitignore",
-    "lint": "eslint . --ignore-path .gitignore",
+    "prettier": "npx prettier --write ./src --ignore-path .gitignore",
+    "lint": "eslint ./src --ignore-path .gitignore",
     "fix-style": "npm run prettier && npm run lint -- --fix",
     "prepare": "husky install"
   },
