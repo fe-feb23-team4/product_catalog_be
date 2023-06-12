@@ -24,11 +24,11 @@ const PORT = process.env.PORT || 3000;
 const server = (0, express_1.default)();
 (0, dbinit_1.dbinit)();
 server.use((0, cors_1.default)());
-server.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
+server.use(express_1.default.static(path_1.default.join(path_1.default.resolve(), 'public')));
 server.get('/', (req, res) => {
     res.send(`Write your query or send request on this server.\n
     Main end points are /products, /phones.\n
-    Also, you can fetch an image. You can find all the URL in database`);
+    Also, you can fetch an image. You can find all the URLs in database`);
 });
 server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const phones = yield Phone_1.Phone.findAll();

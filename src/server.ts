@@ -16,13 +16,13 @@ dbinit();
 
 server.use(cors());
 
-server.use(express.static(path.join(__dirname, 'public')));
+server.use(express.static(path.join(path.resolve(), 'public')));
 
 server.get('/', (req, res) => {
   res.send(
     `Write your query or send request on this server.\n
     Main end points are /products, /phones.\n
-    Also, you can fetch an image. You can find all the URL in database`,
+    Also, you can fetch an image. You can find all the URLs in database`,
   );
 });
 
