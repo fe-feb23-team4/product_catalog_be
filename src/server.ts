@@ -6,6 +6,7 @@ import { Product } from './models/Product';
 import { Phone } from './models/Phone';
 import path from 'path';
 
+
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
