@@ -4,6 +4,8 @@ import { dbinit } from './utils/dbinit';
 import dotenv from 'dotenv';
 import { Product } from './models/Product';
 import { Phone } from './models/Phone';
+import path from 'path';
+
 
 dotenv.config();
 
@@ -15,12 +17,13 @@ dbinit();
 
 server.use(cors());
 
-server.use(express.static('public'));
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => {
   res.send(
-    `Write your query or send request on this server
-    Main end points are /products, /phones`,
+    `Write your query or send request on this server.\n
+    Main end points are /products, /phones.\n
+    Also, you can fetch an image. You can find all the URL in database`,
   );
 });
 
