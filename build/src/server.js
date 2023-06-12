@@ -12,22 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/* eslint-disable no-console */
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dbinit_1 = require("./utils/dbinit");
 const dotenv_1 = __importDefault(require("dotenv"));
 const Product_1 = require("./models/Product");
 const Phone_1 = require("./models/Phone");
+const path_1 = __importDefault(require("path"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3000;
 const server = (0, express_1.default)();
 (0, dbinit_1.dbinit)();
 server.use((0, cors_1.default)());
-server.use(express_1.default.static('public'));
+server.use(express_1.default.static(path_1.default.join(__dirname, 'public')));
 server.get('/', (req, res) => {
-    res.send(`Write your query or send request on this server
-    Main end points are /products, /phones`);
+    res.send(`Write your query or send request on this server.\n
+    Main end points are /products, /phones.\n
+    Also, you can fetch an image. You can find all the URL in database`);
 });
 server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const phones = yield Phone_1.Phone.findAll();
