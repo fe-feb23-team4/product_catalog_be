@@ -15,7 +15,6 @@ import { Phone } from './Phone';
   createdAt: false,
   updatedAt: false,
 })
-
 export class Product extends Model {
   @PrimaryKey
   @AllowNull(false)
@@ -92,7 +91,6 @@ export class Product extends Model {
   @Column({
     type: DataTypes.INTEGER,
   })
-
     year: number;
 
   @AllowNull(false)

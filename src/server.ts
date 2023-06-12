@@ -16,18 +16,13 @@ dbinit();
 
 server.use(cors());
 
+server.use(express.static('public'));
+
 server.get('/', (req, res) => {
   res.send(
     `Write your query or send request on this server
     Main end points are /products, /phones`,
   );
-});
-
-server.get('/products', async(req, res) => {
-  const products = await Product.findAll();
-
-  res.status(200);
-  res.send(products);
 });
 
 server.get('/phones', async(req, res) => {
@@ -37,8 +32,8 @@ server.get('/phones', async(req, res) => {
   res.send(phones);
 });
 
-server.get('/products/:page/:perPage', async(req, res) => {
-  const { page, perPage } = req.params;
+server.get('/products', async(req, res) => {
+  const { page, perPage } = req.query;
   let allProducts;
 
   if (!page && !perPage) {
@@ -49,9 +44,11 @@ server.get('/products/:page/:perPage', async(req, res) => {
     return;
   }
 
+  const currentPage = Number(page) * Number(perPage) - Number(perPage);
+
   allProducts = await Product.findAndCountAll({
     limit: Number(perPage),
-    offset: Number(page),
+    offset: Number(currentPage),
   });
   res.send(allProducts);
 });
