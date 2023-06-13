@@ -28,7 +28,7 @@ server.use(express_1.default.static(path_1.default.join(path_1.default.resolve()
 server.get('/', (req, res) => {
     res.send(`Write your query or send request on this server.\n
     Main end points are /products, /phones.\n
-    Also, you can fetch an image. You can find all the URLs in database`);
+    Also, you can fetch an image. You can find all the URLs in database/ ${path_1.default.resolve()}`);
 });
 server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const phones = yield Phone_1.Phone.findAll();
