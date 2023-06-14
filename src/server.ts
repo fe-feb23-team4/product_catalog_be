@@ -54,4 +54,42 @@ server.get('/products', async(req, res) => {
   res.send(allProducts);
 });
 
+server.get('/phones/:id', async(req, res) => {
+  const { id } = req.params;
+
+  const foundPhone = await Phone.findByPk(id);
+
+  if (!foundPhone) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  res.status(200);
+  res.send(foundPhone);
+});
+
+server.get('/products/:id/recommended', async(req, res) => {
+  const { id } = req.params;
+
+  const foundProduct = await Product.findOne({
+    where: { itemId: id },
+  });
+
+  if (!foundProduct) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * 61) + 1;
+
+  const allProducts = await Product.findAll();
+
+  const recommendedProducts = allProducts.slice(randomIndex, randomIndex + 10);
+
+  res.status(200);
+  res.send(recommendedProducts);
+});
+
 server.listen(PORT);
