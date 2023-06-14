@@ -71,4 +71,27 @@ server.get('/products/:id', async(req, res) => {
   res.send(foundProduct);
 });
 
+server.get('/products/:id/recommended', async(req, res) => {
+  const { id } = req.params;
+
+  const foundProduct = await Product.findOne({
+    where: { itemId: id },
+  });
+
+  if (!foundProduct) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const randomIndex = Math.floor(Math.random() * 61) + 1;
+
+  const allProducts = await Product.findAll();
+
+  const recommendedProducts = allProducts.slice(randomIndex, randomIndex + 10);
+
+  res.status(200);
+  res.send(recommendedProducts);
+});
+
 server.listen(PORT);
