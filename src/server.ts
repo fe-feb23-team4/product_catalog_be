@@ -34,8 +34,19 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page, perPage } = req.query;
+  const { page, perPage, productType } = req.query;
   let allProducts;
+
+  if (productType) {
+    allProducts = await Product.findAll({
+      where: {
+        category: productType,
+      },
+    });
+
+    res.status(200);
+    res.send(allProducts);
+  }
 
   if (!page && !perPage) {
     allProducts = await Product.findAll();
@@ -90,6 +101,27 @@ server.get('/products/:id/recommended', async(req, res) => {
 
   res.status(200);
   res.send(recommendedProducts);
+});
+
+server.get('/products/new', (req, res) => {
+  const newPhones = Product.findAndCountAll({
+    limit: 10,
+    order: [ [ 'year', 'DESC' ] ],
+  });
+
+  res.status(200);
+  res.send(newPhones);
+});
+
+server.get('/products/discount', async(req, res) => {
+  const randomIndex = Math.floor(Math.random() * 61) + 1;
+
+  const allProducts = await Product.findAll();
+
+  const productsWithDiscount = allProducts.slice(randomIndex, randomIndex + 10);
+
+  res.status(200);
+  res.send(productsWithDiscount);
 });
 
 server.listen(PORT);
