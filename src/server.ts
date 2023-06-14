@@ -54,21 +54,19 @@ server.get('/products', async(req, res) => {
   res.send(allProducts);
 });
 
-server.get('/products/:id', async(req, res) => {
+server.get('/phones/:id', async(req, res) => {
   const { id } = req.params;
 
-  const foundProduct = await Product.findOne({
-    where: { itemId: id },
-  });
+  const foundPhone = await Phone.findByPk(id);
 
-  if (!foundProduct) {
+  if (!foundPhone) {
     res.sendStatus(404);
 
     return;
   }
 
   res.status(200);
-  res.send(foundProduct);
+  res.send(foundPhone);
 });
 
 server.get('/products/:id/recommended', async(req, res) => {
