@@ -34,8 +34,16 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page, perPage, productType } = req.query;
+  const { page, perPage, productType, sortBy } = req.query;
   let allProducts;
+
+  if (!page && !perPage && !sortBy) {
+    allProducts = await Product.findAll();
+    res.status(200);
+    res.send(allProducts);
+
+    return;
+  }
 
   if (productType) {
     allProducts = await Product.findAll({
@@ -43,13 +51,6 @@ server.get('/products', async(req, res) => {
         category: productType,
       },
     });
-
-    res.status(200);
-    res.send(allProducts);
-  }
-
-  if (!page && !perPage) {
-    allProducts = await Product.findAll();
     res.status(200);
     res.send(allProducts);
 
@@ -59,6 +60,7 @@ server.get('/products', async(req, res) => {
   const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
   allProducts = await Product.findAndCountAll({
+    order: [[String(sortBy), 'ASC']],
     limit: Number(perPage),
     offset: Number(currentPage),
   });
@@ -106,7 +108,7 @@ server.get('/products/:id/recommended', async(req, res) => {
 server.get('/products/new', (req, res) => {
   const newPhones = Product.findAndCountAll({
     limit: 10,
-    order: [ [ 'year', 'DESC' ] ],
+    order: [['year', 'DESC']],
   });
 
   res.status(200);
