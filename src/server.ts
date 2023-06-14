@@ -54,4 +54,21 @@ server.get('/products', async(req, res) => {
   res.send(allProducts);
 });
 
+server.get('/products/:id', async(req, res) => {
+  const { id } = req.params;
+
+  const foundProduct = await Product.findOne({
+    where: { itemId: id },
+  });
+
+  if (!foundProduct) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  res.status(200);
+  res.send(foundProduct);
+});
+
 server.listen(PORT);
