@@ -36,7 +36,7 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.send(phones);
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, perPage, productType, sortBy } = req.query;
+    const { page = 1, perPage = +Infinity, productType, sortBy } = req.query;
     let allProducts;
     if (!page && !perPage && !sortBy) {
         allProducts = yield Product_1.Product.findAll();
@@ -87,14 +87,14 @@ server.get('/products/:id/recommended', (req, res) => __awaiter(void 0, void 0, 
     res.status(200);
     res.send(recommendedProducts);
 }));
-server.get('/products/new', (req, res) => {
-    const newPhones = Product_1.Product.findAndCountAll({
+server.get('/products/new', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newPhones = yield Product_1.Product.findAll({
         limit: 10,
         order: [['year', 'DESC']],
     });
     res.status(200);
     res.send(newPhones);
-});
+}));
 server.get('/products/discount', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const randomIndex = Math.floor(Math.random() * 61) + 1;
     const allProducts = yield Product_1.Product.findAll();

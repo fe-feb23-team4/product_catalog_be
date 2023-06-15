@@ -34,7 +34,7 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page, perPage, productType, sortBy } = req.query;
+  const { page = 1, perPage = +Infinity, productType, sortBy } = req.query;
   let allProducts;
 
   if (!page && !perPage && !sortBy) {
@@ -105,8 +105,8 @@ server.get('/products/:id/recommended', async(req, res) => {
   res.send(recommendedProducts);
 });
 
-server.get('/products/new', (req, res) => {
-  const newPhones = Product.findAndCountAll({
+server.get('/products/new', async(req, res) => {
+  const newPhones = await Product.findAll({
     limit: 10,
     order: [['year', 'DESC']],
   });
