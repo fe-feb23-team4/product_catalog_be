@@ -60,11 +60,11 @@ server.get('/products', async(req, res) => {
   if (page || perPage || sortBy) {
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
-    allProducts = await Product.findAndCountAll({
+    allProducts = (await Product.findAndCountAll({
       order: [[String(sortBy), 'ASC']],
       limit: Number(perPage),
       offset: Number(currentPage),
-    });
+    })).rows;
   }
 
   res.send(allProducts);

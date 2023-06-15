@@ -56,11 +56,11 @@ server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     if (page || perPage || sortBy) {
         const currentPage = Number(page) * Number(perPage) - Number(perPage);
-        allProducts = yield Product_1.Product.findAndCountAll({
+        allProducts = (yield Product_1.Product.findAndCountAll({
             order: [[String(sortBy), 'ASC']],
             limit: Number(perPage),
             offset: Number(currentPage),
-        });
+        })).rows;
     }
     res.send(allProducts);
 }));
