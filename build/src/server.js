@@ -36,19 +36,70 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.send(phones);
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, perPage } = req.query;
+    const { page, perPage, productType, sortBy } = req.query;
     let allProducts;
-    if (!page && !perPage) {
+    if (!page && !perPage && !sortBy) {
         allProducts = yield Product_1.Product.findAll();
+        res.status(200);
+        res.send(allProducts);
+        return;
+    }
+    if (productType) {
+        allProducts = yield Product_1.Product.findAll({
+            where: {
+                category: productType,
+            },
+        });
         res.status(200);
         res.send(allProducts);
         return;
     }
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
     allProducts = yield Product_1.Product.findAndCountAll({
+        order: [[String(sortBy), 'ASC']],
         limit: Number(perPage),
         offset: Number(currentPage),
     });
     res.send(allProducts);
+}));
+server.get('/phones/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const foundPhone = yield Phone_1.Phone.findByPk(id);
+    if (!foundPhone) {
+        res.sendStatus(404);
+        return;
+    }
+    res.status(200);
+    res.send(foundPhone);
+}));
+server.get('/products/:id/recommended', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const foundProduct = yield Product_1.Product.findOne({
+        where: { itemId: id },
+    });
+    if (!foundProduct) {
+        res.sendStatus(404);
+        return;
+    }
+    const randomIndex = Math.floor(Math.random() * 61) + 1;
+    const allProducts = yield Product_1.Product.findAll();
+    const recommendedProducts = allProducts.slice(randomIndex, randomIndex + 10);
+    res.status(200);
+    res.send(recommendedProducts);
+}));
+server.get('/products/new', (req, res) => {
+    const newPhones = Product_1.Product.findAndCountAll({
+        limit: 10,
+        order: [['year', 'DESC']],
+    });
+    res.status(200);
+    res.send(newPhones);
+});
+server.get('/products/discount', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const randomIndex = Math.floor(Math.random() * 61) + 1;
+    const allProducts = yield Product_1.Product.findAll();
+    const productsWithDiscount = allProducts.slice(randomIndex, randomIndex + 10);
+    res.status(200);
+    res.send(productsWithDiscount);
 }));
 server.listen(PORT);
