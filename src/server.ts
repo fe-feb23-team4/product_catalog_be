@@ -34,7 +34,7 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page = 1, perPage = +Infinity, productType, sortBy } = req.query;
+  const { page = 1, perPage = 100, productType, sortBy = 'name' } = req.query;
   let allProducts;
 
   if (!page && !perPage && !sortBy) {
@@ -57,13 +57,16 @@ server.get('/products', async(req, res) => {
     return;
   }
 
-  const currentPage = Number(page) * Number(perPage) - Number(perPage);
+  if (page || perPage || sortBy) {
+    const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
-  allProducts = await Product.findAndCountAll({
-    order: [[String(sortBy), 'ASC']],
-    limit: Number(perPage),
-    offset: Number(currentPage),
-  });
+    allProducts = await Product.findAndCountAll({
+      order: [[String(sortBy), 'ASC']],
+      limit: Number(perPage),
+      offset: Number(currentPage),
+    });
+  }
+
   res.send(allProducts);
 });
 

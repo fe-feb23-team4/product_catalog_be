@@ -36,7 +36,7 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.send(phones);
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page = 1, perPage = +Infinity, productType, sortBy } = req.query;
+    const { page = 1, perPage = 100, productType, sortBy = 'name' } = req.query;
     let allProducts;
     if (!page && !perPage && !sortBy) {
         allProducts = yield Product_1.Product.findAll();
@@ -54,12 +54,14 @@ server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function
         res.send(allProducts);
         return;
     }
-    const currentPage = Number(page) * Number(perPage) - Number(perPage);
-    allProducts = yield Product_1.Product.findAndCountAll({
-        order: [[String(sortBy), 'ASC']],
-        limit: Number(perPage),
-        offset: Number(currentPage),
-    });
+    if (page || perPage || sortBy) {
+        const currentPage = Number(page) * Number(perPage) - Number(perPage);
+        allProducts = yield Product_1.Product.findAndCountAll({
+            order: [[String(sortBy), 'ASC']],
+            limit: Number(perPage),
+            offset: Number(currentPage),
+        });
+    }
     res.send(allProducts);
 }));
 server.get('/phones/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
