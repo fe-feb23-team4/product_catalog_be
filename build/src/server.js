@@ -19,6 +19,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const Product_1 = require("./models/Product");
 const Phone_1 = require("./models/Phone");
 const path_1 = __importDefault(require("path"));
+const normalizeSortByParam_1 = require("./utils/normalizeSortByParam");
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3000;
 const server = (0, express_1.default)();
@@ -36,10 +37,13 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.send(phones);
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page = 1, perPage = 100, productType, sortBy = 'name' } = req.query;
+    const { page, perPage, productType, sortBy } = req.query;
     let allProducts;
-    if (!page && !perPage && !sortBy) {
-        allProducts = yield Product_1.Product.findAll();
+    const [sortParam, order] = (0, normalizeSortByParam_1.normalizeSortByParam)(sortBy);
+    if (!page && !perPage) {
+        allProducts = yield Product_1.Product.findAll({
+            order: [[sortParam, order]],
+        });
         res.status(200);
         res.send(allProducts);
         return;
@@ -49,15 +53,16 @@ server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function
             where: {
                 category: productType,
             },
+            order: [[sortParam, order]],
         });
         res.status(200);
         res.send(allProducts);
         return;
     }
-    if (page || perPage || sortBy) {
+    if (page || perPage || sortParam) {
         const currentPage = Number(page) * Number(perPage) - Number(perPage);
         allProducts = (yield Product_1.Product.findAndCountAll({
-            order: [[String(sortBy), 'ASC']],
+            order: [[sortParam, order]],
             limit: Number(perPage),
             offset: Number(currentPage),
         })).rows;
