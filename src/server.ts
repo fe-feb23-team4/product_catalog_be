@@ -35,7 +35,7 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page, perPage, productType, sortBy } = req.query;
+  const { page, perPage, productType = 'phones', sortBy } = req.query;
   const [sortParam, order] = normalizeSortByParam(sortBy);
   const currentPage = Number(page) * Number(perPage) - Number(perPage);
 

@@ -37,7 +37,7 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.send(phones);
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { page, perPage, productType, sortBy } = req.query;
+    const { page, perPage, productType = 'phones', sortBy } = req.query;
     const [sortParam, order] = (0, normalizeSortByParam_1.normalizeSortByParam)(sortBy);
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
     const allProducts = (yield Product_1.Product.findAndCountAll({
