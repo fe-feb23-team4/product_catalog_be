@@ -38,35 +38,16 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 }));
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, perPage, productType, sortBy } = req.query;
-    let allProducts;
     const [sortParam, order] = (0, normalizeSortByParam_1.normalizeSortByParam)(sortBy);
-    if (!page && !perPage) {
-        allProducts = yield Product_1.Product.findAll({
-            order: [[sortParam, order]],
-        });
-        res.status(200);
-        res.send(allProducts);
-        return;
-    }
-    if (productType) {
-        allProducts = yield Product_1.Product.findAll({
-            where: {
-                category: productType,
-            },
-            order: [[sortParam, order]],
-        });
-        res.status(200);
-        res.send(allProducts);
-        return;
-    }
-    if (page || perPage || sortParam) {
-        const currentPage = Number(page) * Number(perPage) - Number(perPage);
-        allProducts = (yield Product_1.Product.findAndCountAll({
-            order: [[sortParam, order]],
-            limit: Number(perPage),
-            offset: Number(currentPage),
-        })).rows;
-    }
+    const currentPage = Number(page) * Number(perPage) - Number(perPage);
+    const allProducts = (yield Product_1.Product.findAndCountAll({
+        where: {
+            category: productType,
+        },
+        order: [[sortParam, order]],
+        limit: Number(perPage),
+        offset: Number(currentPage),
+    })).rows;
     res.send(allProducts);
 }));
 server.get('/phones/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
