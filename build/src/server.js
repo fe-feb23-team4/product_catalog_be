@@ -39,6 +39,16 @@ server.get('/phones', (req, res) => __awaiter(void 0, void 0, void 0, function* 
 server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, perPage, productType = 'phones', sortBy } = req.query;
     const [sortParam, order] = (0, normalizeSortByParam_1.normalizeSortByParam)(sortBy);
+    if (!page && !perPage) {
+        const products = yield Product_1.Product.findAll({
+            where: {
+                category: productType,
+            },
+        });
+        res.status(200);
+        res.send(products);
+        return;
+    }
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
     const allProducts = (yield Product_1.Product.findAndCountAll({
         where: {

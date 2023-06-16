@@ -37,6 +37,20 @@ server.get('/phones', async(req, res) => {
 server.get('/products', async(req, res) => {
   const { page, perPage, productType = 'phones', sortBy } = req.query;
   const [sortParam, order] = normalizeSortByParam(sortBy);
+
+  if (!page && !perPage) {
+    const products = await Product.findAll({
+      where: {
+        category: productType,
+      },
+    });
+
+    res.status(200);
+    res.send(products);
+
+    return;
+  }
+
   const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
   const allProducts = (
