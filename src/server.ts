@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { Product } from './models/Product';
 import { Phone } from './models/Phone';
 import path from 'path';
+import { normalizeSortByParam } from './utils/normalizeSortByParam';
 
 dotenv.config();
 
@@ -34,11 +35,14 @@ server.get('/phones', async(req, res) => {
 });
 
 server.get('/products', async(req, res) => {
-  const { page = 1, perPage = 100, productType, sortBy = 'name' } = req.query;
+  const { page, perPage, productType, sortBy } = req.query;
   let allProducts;
+  const [sortParam, order] = normalizeSortByParam(sortBy);
 
-  if (!page && !perPage && !sortBy) {
-    allProducts = await Product.findAll();
+  if (!page && !perPage) {
+    allProducts = await Product.findAll({
+      order: [[sortParam, order]],
+    });
     res.status(200);
     res.send(allProducts);
 
@@ -50,6 +54,7 @@ server.get('/products', async(req, res) => {
       where: {
         category: productType,
       },
+      order: [[sortParam, order]],
     });
     res.status(200);
     res.send(allProducts);
@@ -57,14 +62,16 @@ server.get('/products', async(req, res) => {
     return;
   }
 
-  if (page || perPage || sortBy) {
+  if (page || perPage || sortParam) {
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
-    allProducts = (await Product.findAndCountAll({
-      order: [[String(sortBy), 'ASC']],
-      limit: Number(perPage),
-      offset: Number(currentPage),
-    })).rows;
+    allProducts = (
+      await Product.findAndCountAll({
+        order: [[sortParam, order]],
+        limit: Number(perPage),
+        offset: Number(currentPage),
+      })
+    ).rows;
   }
 
   res.send(allProducts);
