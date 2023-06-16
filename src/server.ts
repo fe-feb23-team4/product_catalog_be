@@ -46,25 +46,23 @@ server.get('/products', async(req, res) => {
     });
 
     res.status(200);
-    res.send(products);
+    res.send({ products, count: 71 });
 
     return;
   }
 
-  const currentPage = Number(page) * Number(perPage) - Number(perPage);
-
-  const allProducts = (
+  const countedProducts = (
     await Product.findAndCountAll({
       where: {
         category: productType,
       },
       order: [[sortParam, order]],
       limit: Number(perPage),
-      offset: Number(currentPage),
+      offset: Number(page) * Number(perPage) - Number(perPage),
     })
-  ).rows;
+  );
 
-  res.send(allProducts);
+  res.send({ products: countedProducts.rows, count: countedProducts.count });
 });
 
 server.get('/phones/:id', async(req, res) => {
