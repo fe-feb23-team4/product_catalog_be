@@ -4,7 +4,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "npx ts-node src/server.ts",
     "build": "tsc -p .",
     "prettier": "npx prettier --write ./src --ignore-path .gitignore",
     "lint": "eslint ./src --ignore-path .gitignore",

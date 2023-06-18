@@ -9,7 +9,7 @@ import { normalizeSortByParam } from './utils/normalizeSortByParam';
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 const server = express();
 
@@ -46,14 +46,14 @@ server.get('/products', async(req, res) => {
     });
 
     res.status(200);
-    res.send(products);
+    res.send({ products, count: 71 });
 
     return;
   }
 
   const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
-  const allProducts = (
+  const { rows, count } = (
     await Product.findAndCountAll({
       where: {
         category: productType,
@@ -62,9 +62,9 @@ server.get('/products', async(req, res) => {
       limit: Number(perPage),
       offset: Number(currentPage),
     })
-  ).rows;
+  );
 
-  res.send(allProducts);
+  res.send({ products: rows, count });
 });
 
 server.get('/phones/:id', async(req, res) => {
@@ -126,4 +126,7 @@ server.get('/products/discount', async(req, res) => {
   res.send(productsWithDiscount);
 });
 
-server.listen(PORT);
+server.listen(PORT, () => {
+  // eslint-disable-next-line no-console
+  console.log('Server is running');
+});

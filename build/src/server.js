@@ -21,7 +21,7 @@ const Phone_1 = require("./models/Phone");
 const path_1 = __importDefault(require("path"));
 const normalizeSortByParam_1 = require("./utils/normalizeSortByParam");
 dotenv_1.default.config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const server = (0, express_1.default)();
 (0, dbinit_1.dbinit)();
 server.use((0, cors_1.default)());
@@ -46,19 +46,19 @@ server.get('/products', (req, res) => __awaiter(void 0, void 0, void 0, function
             },
         });
         res.status(200);
-        res.send(products);
+        res.send({ products, count: 71 });
         return;
     }
     const currentPage = Number(page) * Number(perPage) - Number(perPage);
-    const allProducts = (yield Product_1.Product.findAndCountAll({
+    const { rows, count } = (yield Product_1.Product.findAndCountAll({
         where: {
             category: productType,
         },
         order: [[sortParam, order]],
         limit: Number(perPage),
         offset: Number(currentPage),
-    })).rows;
-    res.send(allProducts);
+    }));
+    res.send({ products: rows, count });
 }));
 server.get('/phones/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -100,4 +100,7 @@ server.get('/products/discount', (req, res) => __awaiter(void 0, void 0, void 0,
     res.status(200);
     res.send(productsWithDiscount);
 }));
-server.listen(PORT);
+server.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log('Server is running');
+});
