@@ -53,16 +53,14 @@ server.get('/products', async(req, res) => {
 
   const currentPage = Number(page) * Number(perPage) - Number(perPage);
 
-  const { rows, count } = (
-    await Product.findAndCountAll({
-      where: {
-        category: productType,
-      },
-      order: [[sortParam, order]],
-      limit: Number(perPage),
-      offset: Number(currentPage),
-    })
-  );
+  const { rows, count } = await Product.findAndCountAll({
+    where: {
+      category: productType,
+    },
+    order: [[sortParam, order]],
+    limit: Number(perPage),
+    offset: Number(currentPage),
+  });
 
   res.send({ products: rows, count });
 });
