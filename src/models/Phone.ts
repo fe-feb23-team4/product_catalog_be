@@ -63,6 +63,12 @@ export class Phone extends Model {
 
   @AllowNull(false)
   @Column({
+    type: DataTypes.STRING,
+  })
+    color: string;
+
+  @AllowNull(false)
+  @Column({
     type: DataTypes.ARRAY(DataTypes.STRING),
   })
     colorsAvailable: string[];

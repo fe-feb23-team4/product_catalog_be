@@ -61,6 +61,12 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.AllowNull)(false),
     (0, sequelize_typescript_1.Column)({
+        type: sequelize_1.DataTypes.STRING,
+    })
+], Phone.prototype, "color", void 0);
+__decorate([
+    (0, sequelize_typescript_1.AllowNull)(false),
+    (0, sequelize_typescript_1.Column)({
         type: sequelize_1.DataTypes.ARRAY(sequelize_1.DataTypes.STRING),
     })
 ], Phone.prototype, "colorsAvailable", void 0);
