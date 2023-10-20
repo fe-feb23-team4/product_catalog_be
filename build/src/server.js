@@ -23,7 +23,6 @@ const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const fs_1 = __importDefault(require("fs"));
-const got_1 = __importDefault(require("got"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
 const server = (0, express_1.default)();
@@ -46,7 +45,7 @@ server.post('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         'Authorization': 'Bearer 770fd644f280e853573c9351617694c01412',
         'Content-Type': 'application/json'
     };
-    const raw = JSON.stringify({
+    const raw = {
         'phone_number': phone_number,
         'options': {
             'number_length': null,
@@ -54,11 +53,14 @@ server.post('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* (
             'callback_url': 'https://product-catalog-be-s8k7.onrender.com/phoneConfirmed',
             'callback_key': null,
         },
-    });
-    const result = yield got_1.default.post('https://call2fa.rikkicom.net/call_api/call', {
-        headers,
-        body: raw
-    });
+    };
+    const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(raw),
+        redirect: 'follow'
+    };
+    const result = yield fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
     res.status(200);
     res.send(result);
 }));
