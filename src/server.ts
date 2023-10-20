@@ -9,7 +9,6 @@ import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
-import { json } from 'sequelize';
 
 dotenv.config();
 
@@ -42,12 +41,12 @@ server.post('/auth', async(req, res) => {
     res.sendStatus(400);
   }
 
-  const myHeaders = new Headers();
+  const headers = {
+    'Authorization': 'Bearer 770fd644f280e853573c9351617694c01412',
+    'Content-Type': 'application/json'
+  }
 
-  myHeaders.append('Authorization', 'Bearer 770fd644f280e853573c9351617694c01412');
-  myHeaders.append('Content-Type', 'application/json');
-
-  const raw = JSON.stringify({
+  const raw = {
     'phone_number': phone_number,
     'options': {
       'number_length': null,
@@ -55,13 +54,14 @@ server.post('/auth', async(req, res) => {
       'callback_url': 'https://product-catalog-be-s8k7.onrender.com/phoneConfirmed',
       'callback_key': null,
     },
-  });
+  };
+
 
   const requestOptions: RequestInit = {
     method: 'POST',
-    headers: myHeaders,
-    body: raw,
-    redirect: 'follow',
+    headers: headers,
+    body: JSON.stringify(raw),
+    redirect: 'follow'
   };
 
   const result = await fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
