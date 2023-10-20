@@ -9,7 +9,6 @@ import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
-const got = require('got');
 
 dotenv.config();
 
@@ -57,18 +56,18 @@ server.post('/auth', async(req, res) => {
     },
   };
 
-  try {
-    const response = await got.post('https://call2fa.rikkicom.net/call_api/call', {
-      headers: headers,
-      json: raw,
-      responseType: 'json',
-    }).json();
 
-    res.status(200);
-    res.send(response);
-  } catch (error) {
-    res.sendStatus(401);
-  }
+  const requestOptions: RequestInit = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(raw),
+    redirect: 'follow'
+  };
+
+  const result = await fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
+
+  res.status(200);
+  res.send(result);
 });
 
 server.post('/phoneConfirmed', async(req, res) => {
