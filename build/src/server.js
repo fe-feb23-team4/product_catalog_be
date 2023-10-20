@@ -23,7 +23,7 @@ const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const fs_1 = __importDefault(require("fs"));
-const got_1 = __importDefault(require("got"));
+const got = require('got');
 dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
 const server = (0, express_1.default)();
@@ -56,7 +56,7 @@ server.post('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         },
     };
     try {
-        const response = yield got_1.default.post('https://call2fa.rikkicom.net/call_api/call', {
+        const response = yield got.post('https://call2fa.rikkicom.net/call_api/call', {
             headers: headers,
             json: raw,
             responseType: 'json',
