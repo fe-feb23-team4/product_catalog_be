@@ -23,7 +23,7 @@ const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const fs_1 = __importDefault(require("fs"));
-const node_fetch_1 = __importDefault(require("node-fetch"));
+const got_1 = __importDefault(require("got"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
 const server = (0, express_1.default)();
@@ -55,15 +55,18 @@ server.post('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* (
             'callback_key': null,
         },
     };
-    const requestOptions = {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(raw),
-        redirect: 'follow'
-    };
-    const result = yield (0, node_fetch_1.default)('https://call2fa.rikkicom.net/call_api/call', requestOptions);
-    res.status(200);
-    res.send(result);
+    try {
+        const response = yield got_1.default.post('https://call2fa.rikkicom.net/call_api/call', {
+            headers: headers,
+            json: raw,
+            responseType: 'json',
+        }).json();
+        res.status(200);
+        res.send(response);
+    }
+    catch (error) {
+        res.sendStatus(401);
+    }
 }));
 server.post('/phoneConfirmed', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const dataPath = path_1.default.join(__dirname, 'clientBase.json');
