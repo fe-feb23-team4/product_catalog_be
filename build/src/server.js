@@ -23,6 +23,7 @@ const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const userRouter_1 = __importDefault(require("./routes/userRouter"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const fs_1 = __importDefault(require("fs"));
+const node_fetch_1 = __importDefault(require("node-fetch"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 5000;
 const server = (0, express_1.default)();
@@ -60,7 +61,7 @@ server.post('/auth', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         body: JSON.stringify(raw),
         redirect: 'follow'
     };
-    const result = yield fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
+    const result = yield (0, node_fetch_1.default)('https://call2fa.rikkicom.net/call_api/call', requestOptions);
     res.status(200);
     res.send(result);
 }));
