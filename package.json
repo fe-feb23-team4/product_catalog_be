@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "main": "server.js",
+  "type": "commonjs",
   "scripts": {
     "dev": "npx ts-node src/server.ts",
     "build": "tsc -p .",
