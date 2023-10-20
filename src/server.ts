@@ -9,6 +9,7 @@ import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
 import cookieParser from 'cookie-parser';
 import fs from 'fs';
+import got from 'got';
 
 dotenv.config();
 
