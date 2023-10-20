@@ -44,24 +44,24 @@ server.post('/auth', async(req, res) => {
 
   const myHeaders = new Headers();
 
-  myHeaders.append("Authorization", "Bearer 770fd644f280e853573c9351617694c01412");
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append('Authorization', 'Bearer 770fd644f280e853573c9351617694c01412');
+  myHeaders.append('Content-Type', 'application/json');
 
   const raw = JSON.stringify({
-    "phone_number": phone_number,
-    "options": {
-    "number_length": null,
-    "send_result": true,
-    "callback_url": "https://product-catalog-be-s8k7.onrender.com/phoneConfirmed",
-    "callback_key": null
-    }
+    'phone_number': phone_number,
+    'options': {
+      'number_length': null,
+      'send_result': true,
+      'callback_url': 'https://product-catalog-be-s8k7.onrender.com/phoneConfirmed',
+      'callback_key': null,
+    },
   });
 
   const requestOptions: RequestInit = {
     method: 'POST',
     headers: myHeaders,
     body: raw,
-    redirect: 'follow'
+    redirect: 'follow',
   };
 
   const result = await fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
@@ -76,6 +76,7 @@ server.post('/phoneConfirmed', async(req, res) => {
   const jsonData = JSON.parse(rawData);
 
   jsonData.clients.push(req.body);
+
   const jsonNewData = JSON.stringify(jsonData);
 
   fs.writeFileSync(jsonNewData, 'clientBase.json');
@@ -97,8 +98,9 @@ server.post('/phoneCheck', (req, res) => {
 
   if (checker) {
     res.status(200);
+
     res.send({
-      message: 'ok'
+      message: 'ok',
     });
   } else {
     res.sendStatus(403);
