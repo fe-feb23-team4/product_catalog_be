@@ -47,7 +47,7 @@ server.post('/auth', async(req, res) => {
     'Content-Type': 'application/json'
   }
 
-  const raw = {
+  const raw = JSON.stringify({
     'phone_number': phone_number,
     'options': {
       'number_length': null,
@@ -55,17 +55,12 @@ server.post('/auth', async(req, res) => {
       'callback_url': 'https://product-catalog-be-s8k7.onrender.com/phoneConfirmed',
       'callback_key': null,
     },
-  };
+  });
 
-
-  const requestOptions: RequestInit = {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(raw),
-    redirect: 'follow'
-  };
-
-  const result = await fetch('https://call2fa.rikkicom.net/call_api/call', requestOptions);
+  const result = await got.post('https://call2fa.rikkicom.net/call_api/call', {
+    headers,
+    body: raw
+  });
 
   res.status(200);
   res.send(result);
